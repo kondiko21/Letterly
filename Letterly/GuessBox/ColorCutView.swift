@@ -31,10 +31,10 @@ struct ColorCutView: View {
             })
             .onReceive(colorStore.$color, perform: { color in
                 self.nextColors.append((color, 0))
-                withAnimation(.easeInOut(duration: 0.5)) {
+                withAnimation(.easeInOut(duration: 0.3)) {
                     self.nextColors[self.nextColors.count-1].1 = 1.0
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     self.primaryColor = self.nextColors[0].0
                     self.nextColors.remove(at: 0)
                 }

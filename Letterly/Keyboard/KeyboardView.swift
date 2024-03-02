@@ -9,46 +9,41 @@ import SwiftUI
 
 struct KeyboardView: View {
     
-    let rows = [
-        "QWERTYUIOP".map {String($0)},
-        "ASDFGHJKL".map {String($0)},
-        "ZXCVBNM".map {String($0)},
-        "ĘĄŚÓŻŹĆŃ".map {String($0)}
-    ]
+    @EnvironmentObject var viewModel: GameViewVM
     
     var body: some View {
         GeometryReader { g in
             VStack(alignment: .center, spacing:0) {
                 HStack(spacing:0) {
-                    ForEach(rows[0], id: \.self) { letter in
-                        ButtonView(letter: letter)
+                    ForEach($viewModel.keyboradRows[0], id: \.self) { button in
+                        ButtonView(letter: button.letter.wrappedValue, state: button.state)
                             .frame(width: g.size.width*0.9/10)
                             .padding([.trailing,.leading], g.size.width*0.1/22)
                     }
                 }
                 HStack(spacing:0) {
-                    ForEach(rows[1], id: \.self) { letter in
-                        ButtonView(letter: letter)
+                    ForEach($viewModel.keyboradRows[1], id: \.self) { button in
+                        ButtonView(letter: button.letter.wrappedValue, state: button.state)
                             .frame(width: g.size.width*0.9/10)
                             .padding([.trailing,.leading], g.size.width*0.1/22)
                     }
                 }
                 HStack(spacing:0) {
-                    ButtonView(icon: Image(systemName: "checkmark"))
+                    ButtonView(icon: Image(systemName: "checkmark"), sign: "confirm")
                         .frame(width: g.size.width*0.9/10*1.5, height: g.size.width*0.9/10*1.5)
                         .padding([.trailing,.leading], g.size.width*0.1/22)
-                    ForEach(rows[2], id: \.self) { letter in
-                        ButtonView(letter: letter)
+                    ForEach($viewModel.keyboradRows[2], id: \.self) { button in
+                        ButtonView(letter: button.letter.wrappedValue, state: button.state)
                             .frame(width: g.size.width*0.9/10)
                             .padding([.trailing,.leading], g.size.width*0.1/22)
                     }
-                    ButtonView(icon: Image(systemName: "delete.left"))
+                    ButtonView(icon: Image(systemName: "delete.left"), sign: "delete")
                         .frame(width: g.size.width*0.9/10*1.5, height: g.size.width*0.9/10*1.5)
                         .padding([.trailing,.leading], g.size.width*0.1/22)
                 }
                 HStack(spacing:0) {
-                    ForEach(rows[3], id: \.self) { letter in
-                        ButtonView(letter: letter)
+                    ForEach($viewModel.keyboradRows[3], id: \.self) { button in
+                        ButtonView(letter: button.letter.wrappedValue, state: button.state)
                             .frame(width: g.size.width*0.9/10)
                             .padding([.trailing,.leading], g.size.width*0.1/22)                    }
                 }
@@ -59,31 +54,34 @@ struct KeyboardView: View {
     }
 }
 
-#Preview {
-    KeyboardView()
-}
-
 struct ButtonView: View {
+    
+    @EnvironmentObject var keyboardReciver: KeyboardReciver
     
     var letter: String?
     var icon: Image?
+    var sign: String?
+    @Binding var state: BoxState
     var isSpecialSign: Bool = false
     @State var isTapped: Bool = false
     
-    init(letter: String) {
+    init(letter: String, state: Binding<BoxState>) {
         self.letter = letter
+        self._state = state
     }
     
-    init(icon: Image) {
+    init(icon: Image, sign: String) {
         self.icon = icon
-        self.isSpecialSign = true
+        self.sign = sign
+        self._state = .constant(.neutral)
     }
     
     var body: some View {
+        if state != .invalid {
         GeometryReader { g in
             if let letter {
                 Rectangle()
-                    .foregroundColor(Color("letterbox.neutral"))
+                    .foregroundColor(state.color)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .shadow(color: .gray, radius: 2)
                     .overlay {
@@ -113,6 +111,30 @@ struct ButtonView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
                 isTapped = false
             }
+            if let letter {
+                keyboardReciver.sign = letter
+            }
+            if let sign {
+                keyboardReciver.sign = sign
+            }
+        }
+        } else {
+            GeometryReader { g in
+                if let letter {
+                    Rectangle()
+                        .foregroundColor(Color("keyboard.incorrect"))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(color: .gray, radius: 2)
+                        .overlay {
+                            Text(letter)
+                                .font(.system(size: 20))
+                                .foregroundStyle(.black)
+                        }
+                        .frame(height: g.size.width*1.5)
+                }
+            }
         }
     }
 }
+
+

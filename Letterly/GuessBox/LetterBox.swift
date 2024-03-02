@@ -9,25 +9,27 @@ import SwiftUI
 
 struct LetterBox: View {
     
-    @State var letter: String = "K"
-    @State var state: BoxState = .neutral
+    @Binding var letter: String
+    @Binding var state: BoxState
+    
+    init(letter: Binding<String>, state: Binding<BoxState>) {
+        self._letter = letter
+        self._state = state
+    }
     
     var body: some View {
         ColorCutView(color: state.color)
             .foregroundStyle(state.color)
             .clipShape(RoundedRectangle(cornerRadius: 10))
+            .shadow(color: .gray, radius: 2)
             .overlay {
                 Text(letter)
                     .font(.system(size: 100))
+                    .foregroundStyle(.black)
                     .minimumScaleFactor(0.05)
             }
-            .shadow(color: .gray, radius: 2)
             .animation(Animation.easeInOut, value: state.color)
     }
-}
-
-#Preview {
-    LetterBox()
 }
 
 enum BoxState {
@@ -45,7 +47,7 @@ enum BoxState {
         case .partlyCorrect:
             return Color(.yellow)
         case .correct:
-            return Color(.green)
+            return Color("letterbox.correct")
         }
         
     }

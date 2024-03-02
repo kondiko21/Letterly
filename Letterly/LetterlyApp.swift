@@ -11,7 +11,8 @@ import SwiftUI
 struct LetterlyApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GameView()
+                .environment(\.font, Font.custom("Rubik-VariableFont_wght", size: 14))
         }
     }
 }

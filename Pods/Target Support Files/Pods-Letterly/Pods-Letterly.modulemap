@@ -1,0 +1,6 @@
+framework module Pods_Letterly {
+  umbrella header "Pods-Letterly-umbrella.h"
+
+  export *
+  module * { export * }
+}

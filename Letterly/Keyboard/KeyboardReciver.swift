@@ -7,10 +7,6 @@
 
 import Foundation
 
-class KeyboardReciever: ObservableObject {
-    @Published var letter: String
-    
-    init(letter: String) {
-        self.letter = ""
-    }
+class KeyboardReciver: ObservableObject {
+    @Published var sign: String = ""
 }

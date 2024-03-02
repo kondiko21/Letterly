@@ -12,9 +12,6 @@ struct GuessWordView: View {
     @EnvironmentObject var gameModel: GameViewVM
     
     var attemptNumber: Int
-    var word: [String] {
-        gameModel.wordGuessAttempts[self.attemptNumber]
-    }
     let boxScale: CGFloat = 0.8
     
     init(id: Int) {
@@ -24,10 +21,11 @@ struct GuessWordView: View {
     var body: some View {
         GeometryReader(content: { g in
             HStack(alignment: .top, spacing: 0) {
-                ForEach((1...5), id: \.self) { i in
-                    LetterBox(letter: "", state: .neutral)
-                        .frame(width: (g.size.width*boxScale)/CGFloat(word.count), height: (g.size.width*boxScale)/CGFloat(word.count))
-                        .padding([.leading], (g.size.width*(1-boxScale))/CGFloat(word.count+1))
+                ForEach((0...4), id: \.self) { i in
+                    LetterBox(letter: $gameModel.wordGuessAttempts[self.attemptNumber][i].letter,
+                              state:$gameModel.wordGuessAttempts[self.attemptNumber][i].state)
+                        .frame(width: (g.size.width*boxScale)/CGFloat(5), height: (g.size.width*boxScale)/CGFloat(5))
+                        .padding([.leading], (g.size.width*(1-boxScale))/CGFloat(6))
                 }
             }
         })
