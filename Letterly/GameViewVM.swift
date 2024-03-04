@@ -17,6 +17,13 @@ class GameViewVM : ObservableObject {
     @Published var isCompleteViewPresented = false
     var activeBox: Int = 0
     
+    var checker: UITextChecker {
+            let checker = UITextChecker()
+            let range = NSRange(location: 0, length: 5)
+            let misspelledRange = checker.rangeOfMisspelledWord(in: "aaaaa", range: range, startingAt: 0, wrap: false, language: "pl_PL")
+            return checker
+    }
+    
     var wordBase = WordsManager()
     
     @Published var word: [String] = "OGIEŃ".map{String($0)}
@@ -43,7 +50,19 @@ class GameViewVM : ObservableObject {
                 }
                 wordGuessAttempts[round][activeBox].letter = ""
             case "confirm":
-                verifyResult()
+                Task {
+                    let result: RoundResult = await checkTypedWord()
+                    await MainActor.run {
+                        print(result.result)
+                        if result.result == .incorrectData {
+                            isNotExistAlertPresented = true
+                        }
+                        wordGuessAttempts[round] = result.correctedLetters
+                    }
+                    try await Task.sleep(nanoseconds: 1_500_000_000)
+                    await verifyResult(result: result.result)
+                }
+                
             default:
                 wordGuessAttempts[round][activeBox].letter = sign
                 if activeBox < 4 {
@@ -52,7 +71,6 @@ class GameViewVM : ObservableObject {
             }
         }
     }
-    
     private func nextRound() {
         if round < 4 {
             round += 1
@@ -61,11 +79,10 @@ class GameViewVM : ObservableObject {
     }
     
     func prepareNewGame() {
-        wordGuessAttempts = []
-        for _ in 0...4 {
-            wordGuessAttempts.append([LetterStateVM](repeating: LetterStateVM(), count: wordLength))
-        }
         
+        for i in 0...4 {
+            wordGuessAttempts[i] = [LetterStateVM](repeating: LetterStateVM(), count: wordLength)
+        }
         keyboradRows = [
             "QWERTYUIOP".map {LetterStateVM(String($0))},
             "ASDFGHJKL".map {LetterStateVM(String($0))},
@@ -86,53 +103,52 @@ class GameViewVM : ObservableObject {
         activeBox = 0
     }
     
-    private func verifyResult() {
-        var result: RoundResults = checkTypedWord()
-        
+    @MainActor
+    private func verifyResult(result: RoundResults) async {
         switch result {
         case .incorrectData:
-            isNotExistAlertPresented = true
-        case .partlyWin:
-            nextRound()
+            print("Incorrect data")
+        case .partlyCorrect:
+            if round != 5 {
+                nextRound()
+            } else {
+                prepareNewGame()
+            }
         case .winning:
             isCompleteViewPresented = true
             prepareNewGame()
         }
     }
     
-    private func checkTypedWord() -> RoundResults {
+    private func checkTypedWord() async -> RoundResult {
         let typedWord = wordGuessAttempts[round].compactMap { $0.letter } as [String]
         var correctLettersAmunt = 0
-        if isReal(word: typedWord.joined(), lang: "pl_PL") {
+        var newStates = wordGuessAttempts[round]
+        if isReal(word: typedWord.joined().lowercased(), lang: "pl_PL") {
+            print("Word exists")
             for i in 0...4 {
-                print(word[i]+" "+wordGuessAttempts[round][i].letter)
                 if word[i] == wordGuessAttempts[round][i].letter {
-                    wordGuessAttempts[round][i].state = .correct
-                    setKeyboard(buttonLetter: word[i], state: .correct)
+                    newStates[i].state = .correct
+                    await setKeyboard(buttonLetter: word[i], state: .correct)
                     correctLettersAmunt += 1
                 } else if word.contains(wordGuessAttempts[round][i].letter) {
-                    wordGuessAttempts[round][i].state = .partlyCorrect
+                    newStates[i].state = .partlyCorrect
                 } else {
-                    wordGuessAttempts[round][i].state = .invalid
+                    newStates[i].state = .invalid
                 }
-                self.setKeyboard(buttonLetter: self.wordGuessAttempts[self.round][i].letter , state: self.wordGuessAttempts[self.round][i].state)
+                await self.setKeyboard(buttonLetter: self.wordGuessAttempts[self.round][i].letter , state: self.wordGuessAttempts[self.round][i].state)
             }
             if correctLettersAmunt == wordLength {
-                return .winning
+                return RoundResult(correctAmount: wordLength, correctedLetters: newStates, result: .winning)
             } else {
-                return .partlyWin(correctAmount: correctLettersAmunt)
+                return RoundResult(correctAmount: correctLettersAmunt, correctedLetters: newStates, result: .partlyCorrect)
             }
         } else {
-            return .incorrectData
+            return RoundResult(correctAmount: 0, correctedLetters: newStates, result: .incorrectData)
         }
     }
     
-    enum RoundResults {
-        case incorrectData
-        case winning
-        case partlyWin(correctAmount: Int)
-    }
-    
+    @MainActor
     private func setKeyboard(buttonLetter: String, state: BoxState) {
         for rowIndex in keyboradRows.indices {
             for buttonIndex in keyboradRows[rowIndex].indices {
@@ -151,14 +167,43 @@ class GameViewVM : ObservableObject {
     }
     
     private func isReal(word: String, lang: String) -> Bool {
-        let checker = UITextChecker()
         if word == "" || word.count < 5 { return false }
         let range = NSRange(location: 0, length: word.utf16.count)
-        let misspelledRange = checker.rangeOfMisspelledWord(in: word.lowercased(), range: range, startingAt: 0, wrap: false, language: lang)
         
-        return misspelledRange.location == NSNotFound
+        print("Checking word:", word, "with language:", lang)
+        
+        let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: lang)
+        
+        if misspelledRange.location == NSNotFound {
+            print("Word exists.")
+            return true
+        } else {
+            print("Word does not exist.")
+            return false
+        }
+    }
+
+    
+}
+
+struct RoundResult {
+    
+    var correctAmount: Int
+    var correctedLetters: [LetterStateVM]
+    var result: RoundResults
+    
+    init(correctAmount: Int, correctedLetters: [LetterStateVM], result: RoundResults) {
+        self.correctAmount = correctAmount
+        self.correctedLetters = correctedLetters
+        self.result = result
     }
     
+}
+
+enum RoundResults {
+    case incorrectData
+    case winning
+    case partlyCorrect
 }
 
 

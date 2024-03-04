@@ -7,81 +7,113 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "126C2E3F-B8B7-4E09-B04B-8E34422B3CEC"
+            uuid = "4951F526-6614-4265-8F11-66F77C683748"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Letterly/GameViewVM.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "106"
-            endingLineNumber = "106"
-            landmarkName = "checkTypedWord()"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "prepareNewGame()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "90B8A433-18FC-429C-86C9-E4BD5CF9D923"
+            uuid = "EA91C293-8DE0-4B6A-BC7B-8EB2A2EECDF3"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Letterly/GameViewVM.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
-            landmarkName = "recivedSign(_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2216B0A5-7413-494B-B255-85D6E291697C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Letterly/GameViewVM.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "107"
-            endingLineNumber = "107"
-            landmarkName = "checkTypedWord()"
+            startingLineNumber = "87"
+            endingLineNumber = "87"
+            landmarkName = "prepareNewGame()"
             landmarkType = "7">
             <Locations>
                <Location
-                  uuid = "2216B0A5-7413-494B-B255-85D6E291697C - f402fcda7cc9296e"
+                  uuid = "EA91C293-8DE0-4B6A-BC7B-8EB2A2EECDF3 - 988b9e120816f3cc"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "Letterly.GameViewVM.verifyResult() -&gt; ()"
+                  symbolName = "Letterly.GameViewVM.prepareNewGame() -&gt; ()"
                   moduleName = "Letterly"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/konrad/Documents/XCode%20Projects/Letterly/Letterly/GameViewVM.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74"
-                  offsetFromSymbolStart = "292">
+                  startingLineNumber = "75"
+                  endingLineNumber = "75"
+                  offsetFromSymbolStart = "720">
                </Location>
                <Location
-                  uuid = "2216B0A5-7413-494B-B255-85D6E291697C - 92268230a7fd5cc9"
+                  uuid = "EA91C293-8DE0-4B6A-BC7B-8EB2A2EECDF3 - 9945513613d4f995"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Letterly.LetterStateVM) -&gt; Swift.Optional&lt;Swift.String&gt; in Letterly.GameViewVM.verifyResult() -&gt; ()"
+                  symbolName = "closure #1 (Swift.Character) -&gt; Letterly.LetterStateVM in Letterly.GameViewVM.prepareNewGame() -&gt; ()"
                   moduleName = "Letterly"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/konrad/Documents/XCode%20Projects/Letterly/Letterly/GameViewVM.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "74"
-                  endingLineNumber = "74"
-                  offsetFromSymbolStart = "44">
+                  startingLineNumber = "75"
+                  endingLineNumber = "75"
+                  offsetFromSymbolStart = "52">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1D921725-0E89-4864-B33B-D6CDA9856A47"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Letterly/GameViewVM.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "prepareNewGame()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F0E4CDCC-E7B2-47F8-AECA-E96D1F9E8640"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Letterly/GameViewVM.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "153"
+            endingLineNumber = "153"
+            landmarkName = "setKeyboard(buttonLetter:state:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4AFE84DB-E861-4EC2-9FBD-7C4BBAAEC274"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Letterly/GameViewVM.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
+            landmarkName = "setKeyboard(buttonLetter:state:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

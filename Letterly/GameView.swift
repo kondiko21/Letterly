@@ -35,7 +35,7 @@ struct GameView: View {
                     }
                 }
                 .onReceive(keyboardReciver.$sign) { sign in
-                    viewModel.recivedSign(sign)
+                        viewModel.recivedSign(sign)
                 }
                 
                 Spacer()

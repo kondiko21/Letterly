@@ -29,7 +29,7 @@ struct KeyboardView: View {
                     }
                 }
                 HStack(spacing:0) {
-                    ButtonView(icon: Image(systemName: "checkmark"), sign: "confirm")
+                    ButtonView(icon: Image(systemName: "delete.left"), sign: "delete")
                         .frame(width: g.size.width*0.9/10*1.5, height: g.size.width*0.9/10*1.5)
                         .padding([.trailing,.leading], g.size.width*0.1/22)
                     ForEach($viewModel.keyboradRows[2], id: \.self) { button in
@@ -37,7 +37,7 @@ struct KeyboardView: View {
                             .frame(width: g.size.width*0.9/10)
                             .padding([.trailing,.leading], g.size.width*0.1/22)
                     }
-                    ButtonView(icon: Image(systemName: "delete.left"), sign: "delete")
+                    ButtonView(icon: Image(systemName: "checkmark"), sign: "confirm")
                         .frame(width: g.size.width*0.9/10*1.5, height: g.size.width*0.9/10*1.5)
                         .padding([.trailing,.leading], g.size.width*0.1/22)
                 }
@@ -93,7 +93,7 @@ struct ButtonView: View {
             }
             if let icon {
                 Rectangle()
-                    .foregroundColor(Color("letterbox.neutral"))
+                    .foregroundColor(Color("keyboard.special"))
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .shadow(color: .gray, radius: 2)
                     .overlay {
