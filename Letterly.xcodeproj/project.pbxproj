@@ -19,6 +19,10 @@
 		712F4D1B2B865658007E3882 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F4D1A2B865658007E3882 /* KeyboardView.swift */; };
 		712F4D1D2B87C89A007E3882 /* GameViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F4D1C2B87C89A007E3882 /* GameViewVM.swift */; };
 		712F4D202B87D069007E3882 /* KeyboardReciver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F4D1F2B87D069007E3882 /* KeyboardReciver.swift */; };
+		71860EAF2BA1E0A100A7A66D /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = 71860EAE2BA1E0A100A7A66D /* NavigationTransitions */; };
+		71860EB12BA1E0C800A7A66D /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71860EB02BA1E0C800A7A66D /* MainScreen.swift */; };
+		71860EB32BA1E36400A7A66D /* CustomModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71860EB22BA1E36400A7A66D /* CustomModifiers.swift */; };
+		71860EB52BA3619900A7A66D /* CustomSegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71860EB42BA3619900A7A66D /* CustomSegmentedPicker.swift */; };
 		719130202B8E58FD00E8167B /* slowa.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7191301F2B8E58FD00E8167B /* slowa.txt */; };
 		719130232B8E59E200E8167B /* WordsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719130222B8E59E200E8167B /* WordsManager.swift */; };
 		71D8FEA82B8902A300863454 /* LetterStateVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8FEA72B8902A300863454 /* LetterStateVM.swift */; };
@@ -42,6 +46,9 @@
 		712F4D1A2B865658007E3882 /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
 		712F4D1C2B87C89A007E3882 /* GameViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewVM.swift; sourceTree = "<group>"; };
 		712F4D1F2B87D069007E3882 /* KeyboardReciver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardReciver.swift; sourceTree = "<group>"; };
+		71860EB02BA1E0C800A7A66D /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
+		71860EB22BA1E36400A7A66D /* CustomModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModifiers.swift; sourceTree = "<group>"; };
+		71860EB42BA3619900A7A66D /* CustomSegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSegmentedPicker.swift; sourceTree = "<group>"; };
 		7191301F2B8E58FD00E8167B /* slowa.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = slowa.txt; path = "../../../../Słowa/slowa.txt"; sourceTree = "<group>"; };
 		719130212B8E590300E8167B /* pl_PL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = pl_PL.txt; path = Letterly/pl_PL.txt; sourceTree = SOURCE_ROOT; };
 		719130222B8E59E200E8167B /* WordsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsManager.swift; sourceTree = "<group>"; };
@@ -56,6 +63,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E16F63595232081D5159706 /* Pods_Letterly.framework in Frameworks */,
+				71860EAF2BA1E0A100A7A66D /* NavigationTransitions in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,8 +108,11 @@
 				712F4D1E2B87CF54007E3882 /* GuessBox */,
 				712F4D0D2B82650C007E3882 /* Keyboard */,
 				712F4CFF2B8264FD007E3882 /* LetterlyApp.swift */,
+				71860EB02BA1E0C800A7A66D /* MainScreen.swift */,
+				71860EB42BA3619900A7A66D /* CustomSegmentedPicker.swift */,
 				712F4D012B8264FD007E3882 /* GameView.swift */,
 				712F4D1C2B87C89A007E3882 /* GameViewVM.swift */,
+				71860EB22BA1E36400A7A66D /* CustomModifiers.swift */,
 				712F4D052B8264FF007E3882 /* Preview Content */,
 			);
 			path = Letterly;
@@ -179,6 +190,9 @@
 			dependencies = (
 			);
 			name = Letterly;
+			packageProductDependencies = (
+				71860EAE2BA1E0A100A7A66D /* NavigationTransitions */,
+			);
 			productName = Letterly;
 			productReference = 712F4CFC2B8264FD007E3882 /* Letterly.app */;
 			productType = "com.apple.product-type.application";
@@ -207,6 +221,9 @@
 				Base,
 			);
 			mainGroup = 712F4CF32B8264FD007E3882;
+			packageReferences = (
+				71860EAD2BA1E0A100A7A66D /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
+			);
 			productRefGroup = 712F4CFD2B8264FD007E3882 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -282,11 +299,14 @@
 				719130232B8E59E200E8167B /* WordsManager.swift in Sources */,
 				712F4D022B8264FD007E3882 /* GameView.swift in Sources */,
 				712F4D002B8264FD007E3882 /* LetterlyApp.swift in Sources */,
+				71860EB12BA1E0C800A7A66D /* MainScreen.swift in Sources */,
 				712F4D0F2B826536007E3882 /* LetterBox.swift in Sources */,
+				71860EB52BA3619900A7A66D /* CustomSegmentedPicker.swift in Sources */,
 				712F4D1B2B865658007E3882 /* KeyboardView.swift in Sources */,
 				712F4D1D2B87C89A007E3882 /* GameViewVM.swift in Sources */,
 				71D8FEA82B8902A300863454 /* LetterStateVM.swift in Sources */,
 				712F4D192B8532FC007E3882 /* GuessWordView.swift in Sources */,
+				71860EB32BA1E36400A7A66D /* CustomModifiers.swift in Sources */,
 				712F4D172B828118007E3882 /* ColorCutView.swift in Sources */,
 				712F4D202B87D069007E3882 /* KeyboardReciver.swift in Sources */,
 			);
@@ -514,6 +534,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		71860EAD2BA1E0A100A7A66D /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.13.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		71860EAE2BA1E0A100A7A66D /* NavigationTransitions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 71860EAD2BA1E0A100A7A66D /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
+			productName = NavigationTransitions;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 712F4CF42B8264FD007E3882 /* Project object */;
 }

@@ -11,6 +11,7 @@ struct KeyboardView: View {
     
     @EnvironmentObject var viewModel: GameViewVM
     
+    
     var body: some View {
         GeometryReader { g in
             VStack(alignment: .center, spacing:0) {
@@ -57,6 +58,8 @@ struct KeyboardView: View {
 struct ButtonView: View {
     
     @EnvironmentObject var keyboardReciver: KeyboardReciver
+    @EnvironmentObject var gameConfiguration: GameConfiguration
+    @EnvironmentObject var viewModel: GameViewVM
     
     var letter: String?
     var icon: Image?
@@ -77,19 +80,31 @@ struct ButtonView: View {
     }
     
     var body: some View {
-        if state != .invalid {
         GeometryReader { g in
             if let letter {
-                Rectangle()
-                    .foregroundColor(state.color)
-                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                    .shadow(color: .gray, radius: 2)
-                    .overlay {
-                        Text(letter)
-                            .font(.system(size: 20))
-                            .foregroundStyle(.black)
-                    }
-                    .frame(height: g.size.width*1.5)
+                if state != .invalid {
+                    Rectangle()
+                        .foregroundColor(state.color)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(color: .gray, radius: 2)
+                        .overlay {
+                            Text(letter)
+                                .font(.system(size: 20))
+                                .foregroundStyle(.black)
+                        }
+                        .frame(height: g.size.width*1.5)
+                } else {
+                    Rectangle()
+                        .foregroundColor(Color("keyboard.incorrect"))
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .shadow(color: .gray, radius: 2)
+                        .overlay {
+                            Text(letter)
+                                .font(.system(size: 20))
+                                .foregroundStyle(.black)
+                        }
+                        .frame(height: g.size.width*1.5)
+                }
             }
             if let icon {
                 Rectangle()
@@ -106,31 +121,19 @@ struct ButtonView: View {
         .scaleEffect(isTapped ? 0.95 : 1.0)
         .animation(.easeInOut(duration: 0.08), value: isTapped)
         .onTapGesture {
-            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-            isTapped = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
-                isTapped = false
-            }
-            if let letter {
-                keyboardReciver.sign = letter
-            }
-            if let sign {
-                keyboardReciver.sign = sign
-            }
-        }
-        } else {
-            GeometryReader { g in
-                if let letter {
-                    Rectangle()
-                        .foregroundColor(Color("keyboard.incorrect"))
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                        .shadow(color: .gray, radius: 2)
-                        .overlay {
-                            Text(letter)
-                                .font(.system(size: 20))
-                                .foregroundStyle(.black)
-                        }
-                        .frame(height: g.size.width*1.5)
+            if !(state == .invalid && gameConfiguration.gameMode == .hard) {
+                UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+                isTapped = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
+                    isTapped = false
+                }
+                if viewModel.typingEnabled {
+                    if let letter {
+                        keyboardReciver.sign = letter
+                    }
+                    if let sign {
+                        keyboardReciver.sign = sign
+                    }
                 }
             }
         }

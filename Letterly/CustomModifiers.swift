@@ -7,12 +7,19 @@
 
 import SwiftUI
 
-struct CustomModifiers: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct Logo: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: 35))
+            .fontWeight(.heavy)
+            .foregroundStyle(Color(.gray))
+            .shadow(radius: 2)
+            .padding()
     }
 }
 
-#Preview {
-    CustomModifiers()
+extension View {
+    func logoStyle() -> some View {
+        modifier(Logo())
+    }
 }

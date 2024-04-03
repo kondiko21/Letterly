@@ -23,7 +23,7 @@ struct GuessWordView: View {
             HStack(alignment: .top, spacing: 0) {
                 ForEach((0...4), id: \.self) { i in
                     LetterBox(letter: $gameModel.wordGuessAttempts[self.attemptNumber][i].letter,
-                              state:$gameModel.wordGuessAttempts[self.attemptNumber][i].state)
+                              state:$gameModel.wordGuessAttempts[self.attemptNumber][i].state, attemptNumber: attemptNumber)
                         .frame(width: (g.size.width*boxScale)/CGFloat(5), height: (g.size.width*boxScale)/CGFloat(5))
                         .padding([.leading], (g.size.width*(1-boxScale))/CGFloat(6))
                 }

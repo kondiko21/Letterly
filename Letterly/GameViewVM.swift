@@ -7,22 +7,18 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 class GameViewVM : ObservableObject {
     
     @Published var wordLength: Int = 5
+    @Published var typingEnabled = true //Determines if keyboard is working - used during async await
     @Published var wordGuessAttempts: [[LetterStateVM]] = []
     @Published var round: Int = 0
     @Published var isNotExistAlertPresented = false
     @Published var isCompleteViewPresented = false
+    @Published var isGameOver = false
     var activeBox: Int = 0
-    
-    var checker: UITextChecker {
-            let checker = UITextChecker()
-            let range = NSRange(location: 0, length: 5)
-            let misspelledRange = checker.rangeOfMisspelledWord(in: "aaaaa", range: range, startingAt: 0, wrap: false, language: "pl_PL")
-            return checker
-    }
     
     var wordBase = WordsManager()
     
@@ -44,29 +40,46 @@ class GameViewVM : ObservableObject {
         if !sign.isEmpty {
             switch sign {
             case "delete":
-                if wordGuessAttempts[round][activeBox].letter == "" && activeBox != 0 {
+                if activeBox != 5 {
+                    if wordGuessAttempts[round][activeBox].letter == "" && activeBox != 0 {
+                        activeBox -= 1
+                        recivedSign("delete")
+                    }
+                } else {
                     activeBox -= 1
                     recivedSign("delete")
                 }
                 wordGuessAttempts[round][activeBox].letter = ""
             case "confirm":
                 Task {
+                    await MainActor.run {
+                        typingEnabled = false
+                        print("Typing disabled")
+                    }
                     let result: RoundResult = await checkTypedWord()
                     await MainActor.run {
-                        print(result.result)
                         if result.result == .incorrectData {
                             isNotExistAlertPresented = true
                         }
                         wordGuessAttempts[round] = result.correctedLetters
+                        if result.result != .incorrectData {
+                            for letter in result.correctedLetters {
+                                setKeyboard(buttonLetter: letter.letter, state: letter.state)
+                            }
+                        }
+                        typingEnabled = true
+                        print("Typing enabled")
                     }
                     try await Task.sleep(nanoseconds: 1_500_000_000)
                     await verifyResult(result: result.result)
                 }
                 
             default:
-                wordGuessAttempts[round][activeBox].letter = sign
-                if activeBox < 4 {
-                    activeBox += 1
+                if activeBox < 5 {
+                    wordGuessAttempts[round][activeBox].letter = sign
+                    if activeBox < 5 {
+                        activeBox += 1
+                    }
                 }
             }
         }
@@ -79,6 +92,7 @@ class GameViewVM : ObservableObject {
     }
     
     func prepareNewGame() {
+        var _ = isReal(word: "aaaaa", lang: "pl_PL") //Solving problem (bug probably) which first execution always return true
         
         for i in 0...4 {
             wordGuessAttempts[i] = [LetterStateVM](repeating: LetterStateVM(), count: wordLength)
@@ -109,42 +123,29 @@ class GameViewVM : ObservableObject {
         case .incorrectData:
             print("Incorrect data")
         case .partlyCorrect:
-            if round != 5 {
+            if round != 4 {
                 nextRound()
             } else {
-                prepareNewGame()
+                isGameOver = true
             }
         case .winning:
             isCompleteViewPresented = true
-            prepareNewGame()
         }
     }
     
-    private func checkTypedWord() async -> RoundResult {
+    private func checkTypedWord() -> RoundResult {
         let typedWord = wordGuessAttempts[round].compactMap { $0.letter } as [String]
-        var correctLettersAmunt = 0
-        var newStates = wordGuessAttempts[round]
         if isReal(word: typedWord.joined().lowercased(), lang: "pl_PL") {
-            print("Word exists")
-            for i in 0...4 {
-                if word[i] == wordGuessAttempts[round][i].letter {
-                    newStates[i].state = .correct
-                    await setKeyboard(buttonLetter: word[i], state: .correct)
-                    correctLettersAmunt += 1
-                } else if word.contains(wordGuessAttempts[round][i].letter) {
-                    newStates[i].state = .partlyCorrect
-                } else {
-                    newStates[i].state = .invalid
-                }
-                await self.setKeyboard(buttonLetter: self.wordGuessAttempts[self.round][i].letter , state: self.wordGuessAttempts[self.round][i].state)
-            }
-            if correctLettersAmunt == wordLength {
-                return RoundResult(correctAmount: wordLength, correctedLetters: newStates, result: .winning)
+            
+            var result = verifyWord()
+            
+            if result.0 == wordLength {
+                return RoundResult(correctAmount: wordLength, correctedLetters: result.1, result: .winning)
             } else {
-                return RoundResult(correctAmount: correctLettersAmunt, correctedLetters: newStates, result: .partlyCorrect)
+                return RoundResult(correctAmount: result.0, correctedLetters: result.1, result: .partlyCorrect)
             }
         } else {
-            return RoundResult(correctAmount: 0, correctedLetters: newStates, result: .incorrectData)
+            return RoundResult(correctAmount: 0, correctedLetters: wordGuessAttempts[round], result: .incorrectData)
         }
     }
     
@@ -170,19 +171,69 @@ class GameViewVM : ObservableObject {
         if word == "" || word.count < 5 { return false }
         let range = NSRange(location: 0, length: word.utf16.count)
         
-        print("Checking word:", word, "with language:", lang)
+        let checker: UITextChecker = UITextChecker()
         
         let misspelledRange = checker.rangeOfMisspelledWord(in: word, range: range, startingAt: 0, wrap: false, language: lang)
         
         if misspelledRange.location == NSNotFound {
-            print("Word exists.")
             return true
         } else {
-            print("Word does not exist.")
             return false
         }
     }
 
+    func verifyWord() -> (Int, [LetterStateVM]) {
+        var newStates = wordGuessAttempts[round]
+        var letterSet : [String:Int] = [:]
+        var correctLettersAmunt: Int = 0
+        
+        for (id, letter) in word.enumerated() {
+            if let letterCounter = letterSet[letter] {
+                letterSet[word[id]]! += 1
+            } else {
+                letterSet[letter] = 1
+            }
+        }
+        
+        for i in 0...4 {
+            if word[i] == wordGuessAttempts[round][i].letter {
+                newStates[i].state = .correct
+                correctLettersAmunt += 1
+                letterSet[wordGuessAttempts[round][i].letter]? -= 1
+            } else if word.contains(wordGuessAttempts[round][i].letter) {
+                if let letterData = letterSet[wordGuessAttempts[round][i].letter] {
+                    if letterData > 0 {
+                        newStates[i].state = .partlyCorrect
+                        letterSet[wordGuessAttempts[round][i].letter]? -= 1
+                    } else {
+                        newStates[i].state = .invalid
+                    }
+                }
+            } else {
+                newStates[i].state = .invalid
+            }
+        }
+        return (correctLettersAmunt, newStates)
+    }
+}
+
+struct LetterSetElement {
+    
+    var letter: String
+    var count: Int
+    
+    init(letter: String, count: Int) {
+        self.letter = letter
+        self.count = count
+    }
+    
+    mutating func add() {
+        self.count = count + 1
+    }
+    
+    mutating func remove() {
+        self.count = count + 1
+    }
     
 }
 
@@ -205,5 +256,3 @@ enum RoundResults {
     case winning
     case partlyCorrect
 }
-
-

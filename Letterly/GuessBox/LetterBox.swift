@@ -9,26 +9,52 @@ import SwiftUI
 
 struct LetterBox: View {
     
+    @EnvironmentObject var gameModel: GameViewVM
     @Binding var letter: String
     @Binding var state: BoxState
+    var attemptNumber: Int
+    @State var isActive: Bool = false
     
-    init(letter: Binding<String>, state: Binding<BoxState>) {
+    init(letter: Binding<String>, state: Binding<BoxState>, attemptNumber: Int) {
         self._letter = letter
         self._state = state
+        self.attemptNumber = attemptNumber
     }
     
     var body: some View {
-        ColorCutView(color: state.color)
-            .foregroundStyle(state.color)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(color: .gray, radius: 2)
-            .overlay {
-                Text(letter)
-                    .font(.system(size: 100))
-                    .foregroundStyle(.black)
-                    .minimumScaleFactor(0.05)
-            }
-            .animation(Animation.easeInOut, value: state.color)
+            ColorCutView(color: state.color)
+                .foregroundStyle(state.color)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .shadow(color: .gray, radius: 2)
+                .overlay {
+                    ZStack {
+                        if !isActive {
+                            Color("letterbox.inactive").opacity(0.5)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        Text(letter)
+                            .font(.system(size: 100))
+                            .foregroundStyle(.black)
+                            .minimumScaleFactor(0.05)
+                    }
+                }
+                .animation(Animation.easeInOut, value: state.color)
+                .onChange(of: gameModel.round) { newValue in
+                    withAnimation(.easeIn) {
+                        if attemptNumber <= gameModel.round {
+                            isActive = true
+                        } else {
+                            isActive = false
+                        }
+                    }
+                }
+                .onAppear {
+                    if attemptNumber <= gameModel.round {
+                        isActive = true
+                    } else {
+                        isActive = false
+                    }
+        }
     }
 }
 
