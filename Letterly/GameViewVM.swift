@@ -56,7 +56,7 @@ class GameViewVM : ObservableObject {
                         typingEnabled = false
                         print("Typing disabled")
                     }
-                    let result: RoundResult = await checkTypedWord()
+                    let result: RoundResult = checkTypedWord()
                     await MainActor.run {
                         if result.result == .incorrectData {
                             isNotExistAlertPresented = true
@@ -137,7 +137,7 @@ class GameViewVM : ObservableObject {
         let typedWord = wordGuessAttempts[round].compactMap { $0.letter } as [String]
         if isReal(word: typedWord.joined().lowercased(), lang: "pl_PL") {
             
-            var result = verifyWord()
+            let result = verifyWord()
             
             if result.0 == wordLength {
                 return RoundResult(correctAmount: wordLength, correctedLetters: result.1, result: .winning)
@@ -154,11 +154,18 @@ class GameViewVM : ObservableObject {
         for rowIndex in keyboradRows.indices {
             for buttonIndex in keyboradRows[rowIndex].indices {
                 if keyboradRows[rowIndex][buttonIndex].letter == buttonLetter {
+                    print("\(buttonLetter) \(state) \(keyboradRows[rowIndex][buttonIndex].state)")
                     if state == .partlyCorrect {
                         if keyboradRows[rowIndex][buttonIndex].state != .correct {
                             keyboradRows[rowIndex][buttonIndex].state = state
                         }
+                    } else if state == .invalid {
+                        print("\(keyboradRows[rowIndex][buttonIndex].state)")
+                        if (keyboradRows[rowIndex][buttonIndex].state != .partlyCorrect) &&  (keyboradRows[rowIndex][buttonIndex].state != .correct) {
+                            keyboradRows[rowIndex][buttonIndex].state = state
+                        }
                     } else {
+                        print("\(buttonLetter)")
                         keyboradRows[rowIndex][buttonIndex].state = state
                     }
                     break
@@ -182,13 +189,13 @@ class GameViewVM : ObservableObject {
         }
     }
 
-    func verifyWord() -> (Int, [LetterStateVM]) {
+    func verifyWord() -> (Int, [LetterStateVM]) { //(correct letter amount, states array)
         var newStates = wordGuessAttempts[round]
         var letterSet : [String:Int] = [:]
         var correctLettersAmunt: Int = 0
         
         for (id, letter) in word.enumerated() {
-            if let letterCounter = letterSet[letter] {
+            if letterSet[letter] != nil {
                 letterSet[word[id]]! += 1
             } else {
                 letterSet[letter] = 1
