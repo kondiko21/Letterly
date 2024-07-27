@@ -188,11 +188,13 @@ class GameViewVM : ObservableObject {
             return false
         }
     }
-
-    func verifyWord() -> (Int, [LetterStateVM]) { //(correct letter amount, states array)
+    
+    private func verifyWord() -> (Int, [LetterStateVM]) { //(correct letter amount, states array)
         var newStates = wordGuessAttempts[round]
-        var letterSet : [String:Int] = [:]
+        var letterSet : [String:Int] = [:] //How often letter occurs in word
         var correctLettersAmunt: Int = 0
+        
+        var wordArray: [String?] = wordGuessAttempts[round].map { String($0.letter) } //Every letter as separate cell in array
         
         for (id, letter) in word.enumerated() {
             if letterSet[letter] != nil {
@@ -202,64 +204,73 @@ class GameViewVM : ObservableObject {
             }
         }
         
+        //Counting correct and removing them from array
         for i in 0...4 {
-            if word[i] == wordGuessAttempts[round][i].letter {
+            if wordArray[i] == word[i] {
                 newStates[i].state = .correct
                 correctLettersAmunt += 1
-                letterSet[wordGuessAttempts[round][i].letter]? -= 1
-            } else if word.contains(wordGuessAttempts[round][i].letter) {
-                if let letterData = letterSet[wordGuessAttempts[round][i].letter] {
-                    if letterData > 0 {
+                letterSet[wordArray[i]!]! -= 1
+                wordArray[i] = nil
+            }
+        }
+        for i in 0...4 {
+            if let letter = wordArray[i] {
+                if letterSet.contains(where: {$0.key == letter}) {
+                    if letterSet[letter]! > 0 {
                         newStates[i].state = .partlyCorrect
-                        letterSet[wordGuessAttempts[round][i].letter]? -= 1
-                    } else {
-                        newStates[i].state = .invalid
+                        letterSet[letter]? -= 1
+                        wordArray[i] = nil
                     }
                 }
-            } else {
+            }
+        }
+        for i in 0...4 {
+            if let letter = wordArray[i] {
                 newStates[i].state = .invalid
+                wordArray[i] = nil
             }
         }
         return (correctLettersAmunt, newStates)
     }
-}
-
-struct LetterSetElement {
     
-    var letter: String
-    var count: Int
     
-    init(letter: String, count: Int) {
-        self.letter = letter
-        self.count = count
+    struct LetterSetElement {
+        
+        var letter: String
+        var count: Int
+        
+        init(letter: String, count: Int) {
+            self.letter = letter
+            self.count = count
+        }
+        
+        mutating func add() {
+            self.count = count + 1
+        }
+        
+        mutating func remove() {
+            self.count = count + 1
+        }
+        
     }
     
-    mutating func add() {
-        self.count = count + 1
+    struct RoundResult {
+        
+        var correctAmount: Int
+        var correctedLetters: [LetterStateVM]
+        var result: RoundResults
+        
+        init(correctAmount: Int, correctedLetters: [LetterStateVM], result: RoundResults) {
+            self.correctAmount = correctAmount
+            self.correctedLetters = correctedLetters
+            self.result = result
+        }
+        
     }
     
-    mutating func remove() {
-        self.count = count + 1
+    enum RoundResults {
+        case incorrectData
+        case winning
+        case partlyCorrect
     }
-    
-}
-
-struct RoundResult {
-    
-    var correctAmount: Int
-    var correctedLetters: [LetterStateVM]
-    var result: RoundResults
-    
-    init(correctAmount: Int, correctedLetters: [LetterStateVM], result: RoundResults) {
-        self.correctAmount = correctAmount
-        self.correctedLetters = correctedLetters
-        self.result = result
-    }
-    
-}
-
-enum RoundResults {
-    case incorrectData
-    case winning
-    case partlyCorrect
 }
