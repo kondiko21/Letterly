@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		710BDBEC2C55465600284D27 /* Words in Resources */ = {isa = PBXBuildFile; fileRef = 710BDBEB2C55465600284D27 /* Words */; };
+		710BDBF02C5549BB00284D27 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710BDBEF2C5549BB00284D27 /* SettingsView.swift */; };
+		710BDBF22C5549DB00284D27 /* SettingsViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710BDBF12C5549DB00284D27 /* SettingsViewVM.swift */; };
+		710BDBF42C58017100284D27 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710BDBF32C58017100284D27 /* LanguageManager.swift */; };
 		712F4D002B8264FD007E3882 /* LetterlyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F4CFF2B8264FD007E3882 /* LetterlyApp.swift */; };
 		712F4D022B8264FD007E3882 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F4D012B8264FD007E3882 /* GameView.swift */; };
 		712F4D042B8264FF007E3882 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 712F4D032B8264FF007E3882 /* Assets.xcassets */; };
@@ -19,19 +23,21 @@
 		712F4D1B2B865658007E3882 /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F4D1A2B865658007E3882 /* KeyboardView.swift */; };
 		712F4D1D2B87C89A007E3882 /* GameViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F4D1C2B87C89A007E3882 /* GameViewVM.swift */; };
 		712F4D202B87D069007E3882 /* KeyboardReciver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 712F4D1F2B87D069007E3882 /* KeyboardReciver.swift */; };
-		71860EAF2BA1E0A100A7A66D /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = 71860EAE2BA1E0A100A7A66D /* NavigationTransitions */; };
 		71860EB12BA1E0C800A7A66D /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71860EB02BA1E0C800A7A66D /* MainScreen.swift */; };
 		71860EB32BA1E36400A7A66D /* CustomModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71860EB22BA1E36400A7A66D /* CustomModifiers.swift */; };
 		71860EB52BA3619900A7A66D /* CustomSegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71860EB42BA3619900A7A66D /* CustomSegmentedPicker.swift */; };
 		719130202B8E58FD00E8167B /* slowa.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7191301F2B8E58FD00E8167B /* slowa.txt */; };
 		719130232B8E59E200E8167B /* WordsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 719130222B8E59E200E8167B /* WordsManager.swift */; };
 		71D8FEA82B8902A300863454 /* LetterStateVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D8FEA72B8902A300863454 /* LetterStateVM.swift */; };
-		71DF34432B8E72A200FFDEC5 /* pl_PL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 719130212B8E590300E8167B /* pl_PL.txt */; };
 		7E16F63595232081D5159706 /* Pods_Letterly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 332845B938757E3B37939F9E /* Pods_Letterly.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		332845B938757E3B37939F9E /* Pods_Letterly.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Letterly.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		710BDBEB2C55465600284D27 /* Words */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Words; sourceTree = "<group>"; };
+		710BDBEF2C5549BB00284D27 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		710BDBF12C5549DB00284D27 /* SettingsViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewVM.swift; sourceTree = "<group>"; };
+		710BDBF32C58017100284D27 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		712F4CFC2B8264FD007E3882 /* Letterly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Letterly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		712F4CFF2B8264FD007E3882 /* LetterlyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterlyApp.swift; sourceTree = "<group>"; };
 		712F4D012B8264FD007E3882 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
@@ -50,7 +56,6 @@
 		71860EB22BA1E36400A7A66D /* CustomModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModifiers.swift; sourceTree = "<group>"; };
 		71860EB42BA3619900A7A66D /* CustomSegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSegmentedPicker.swift; sourceTree = "<group>"; };
 		7191301F2B8E58FD00E8167B /* slowa.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = slowa.txt; path = "../../../../Słowa/slowa.txt"; sourceTree = "<group>"; };
-		719130212B8E590300E8167B /* pl_PL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = pl_PL.txt; path = Letterly/pl_PL.txt; sourceTree = SOURCE_ROOT; };
 		719130222B8E59E200E8167B /* WordsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsManager.swift; sourceTree = "<group>"; };
 		71D8FEA72B8902A300863454 /* LetterStateVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetterStateVM.swift; sourceTree = "<group>"; };
 		8DA723DF176B317E156CF14F /* Pods-Letterly.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Letterly.release.xcconfig"; path = "Target Support Files/Pods-Letterly/Pods-Letterly.release.xcconfig"; sourceTree = "<group>"; };
@@ -63,7 +68,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E16F63595232081D5159706 /* Pods_Letterly.framework in Frameworks */,
-				71860EAF2BA1E0A100A7A66D /* NavigationTransitions in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +80,24 @@
 				332845B938757E3B37939F9E /* Pods_Letterly.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		710BDBED2C5548A400284D27 /* GameView */ = {
+			isa = PBXGroup;
+			children = (
+				712F4D012B8264FD007E3882 /* GameView.swift */,
+				712F4D1C2B87C89A007E3882 /* GameViewVM.swift */,
+			);
+			path = GameView;
+			sourceTree = "<group>";
+		};
+		710BDBEE2C5549A400284D27 /* SettingsView */ = {
+			isa = PBXGroup;
+			children = (
+				710BDBEF2C5549BB00284D27 /* SettingsView.swift */,
+				710BDBF12C5549DB00284D27 /* SettingsViewVM.swift */,
+			);
+			path = SettingsView;
 			sourceTree = "<group>";
 		};
 		712F4CF32B8264FD007E3882 = {
@@ -99,19 +121,19 @@
 		712F4CFE2B8264FD007E3882 /* Letterly */ = {
 			isa = PBXGroup;
 			children = (
+				710BDBEB2C55465600284D27 /* Words */,
 				712F4D152B826A92007E3882 /* Info.plist */,
 				712F4D032B8264FF007E3882 /* Assets.xcassets */,
-				712F4D102B826A33007E3882 /* Fonts */,
-				719130222B8E59E200E8167B /* WordsManager.swift */,
-				719130212B8E590300E8167B /* pl_PL.txt */,
-				719130242B8E5A4900E8167B /* Words */,
-				712F4D1E2B87CF54007E3882 /* GuessBox */,
-				712F4D0D2B82650C007E3882 /* Keyboard */,
 				712F4CFF2B8264FD007E3882 /* LetterlyApp.swift */,
 				71860EB02BA1E0C800A7A66D /* MainScreen.swift */,
+				719130222B8E59E200E8167B /* WordsManager.swift */,
+				710BDBF32C58017100284D27 /* LanguageManager.swift */,
+				712F4D102B826A33007E3882 /* Fonts */,
+				712F4D1E2B87CF54007E3882 /* GuessBox */,
+				710BDBED2C5548A400284D27 /* GameView */,
+				710BDBEE2C5549A400284D27 /* SettingsView */,
+				712F4D0D2B82650C007E3882 /* Keyboard */,
 				71860EB42BA3619900A7A66D /* CustomSegmentedPicker.swift */,
-				712F4D012B8264FD007E3882 /* GameView.swift */,
-				712F4D1C2B87C89A007E3882 /* GameViewVM.swift */,
 				71860EB22BA1E36400A7A66D /* CustomModifiers.swift */,
 				712F4D052B8264FF007E3882 /* Preview Content */,
 			);
@@ -156,13 +178,6 @@
 			path = GuessBox;
 			sourceTree = "<group>";
 		};
-		719130242B8E5A4900E8167B /* Words */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Words;
-			sourceTree = "<group>";
-		};
 		AFF3946A8C96BE7F1E18043F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -191,7 +206,6 @@
 			);
 			name = Letterly;
 			packageProductDependencies = (
-				71860EAE2BA1E0A100A7A66D /* NavigationTransitions */,
 			);
 			productName = Letterly;
 			productReference = 712F4CFC2B8264FD007E3882 /* Letterly.app */;
@@ -240,7 +254,7 @@
 			files = (
 				712F4D132B826A4F007E3882 /* Rubik-VariableFont_wght.ttf in Resources */,
 				712F4D142B826A4F007E3882 /* Rubik-Italic-VariableFont_wght.ttf in Resources */,
-				71DF34432B8E72A200FFDEC5 /* pl_PL.txt in Resources */,
+				710BDBEC2C55465600284D27 /* Words in Resources */,
 				719130202B8E58FD00E8167B /* slowa.txt in Resources */,
 				712F4D072B8264FF007E3882 /* Preview Assets.xcassets in Resources */,
 				712F4D042B8264FF007E3882 /* Assets.xcassets in Resources */,
@@ -303,12 +317,15 @@
 				712F4D0F2B826536007E3882 /* LetterBox.swift in Sources */,
 				71860EB52BA3619900A7A66D /* CustomSegmentedPicker.swift in Sources */,
 				712F4D1B2B865658007E3882 /* KeyboardView.swift in Sources */,
+				710BDBF02C5549BB00284D27 /* SettingsView.swift in Sources */,
 				712F4D1D2B87C89A007E3882 /* GameViewVM.swift in Sources */,
 				71D8FEA82B8902A300863454 /* LetterStateVM.swift in Sources */,
 				712F4D192B8532FC007E3882 /* GuessWordView.swift in Sources */,
 				71860EB32BA1E36400A7A66D /* CustomModifiers.swift in Sources */,
 				712F4D172B828118007E3882 /* ColorCutView.swift in Sources */,
 				712F4D202B87D069007E3882 /* KeyboardReciver.swift in Sources */,
+				710BDBF22C5549DB00284D27 /* SettingsViewVM.swift in Sources */,
+				710BDBF42C58017100284D27 /* LanguageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,7 +464,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Letterly/Preview Content\"";
 				DEVELOPMENT_TEAM = G323CMNMM3;
 				ENABLE_PREVIEWS = YES;
@@ -483,7 +500,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Letterly/Preview Content\"";
 				DEVELOPMENT_TEAM = G323CMNMM3;
 				ENABLE_PREVIEWS = YES;
@@ -545,14 +562,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		71860EAE2BA1E0A100A7A66D /* NavigationTransitions */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 71860EAD2BA1E0A100A7A66D /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
-			productName = NavigationTransitions;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 712F4CF42B8264FD007E3882 /* Project object */;
 }

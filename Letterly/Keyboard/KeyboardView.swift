@@ -16,14 +16,14 @@ struct KeyboardView: View {
         GeometryReader { g in
             VStack(alignment: .center, spacing:0) {
                 HStack(spacing:0) {
-                    ForEach($viewModel.keyboradRows[0], id: \.self) { button in
+                    ForEach($viewModel.keyboardRows[0], id: \.self) { button in
                         ButtonView(letter: button.letter.wrappedValue, state: button.state)
                             .frame(width: g.size.width*0.9/10)
                             .padding([.trailing,.leading], g.size.width*0.1/22)
                     }
                 }
                 HStack(spacing:0) {
-                    ForEach($viewModel.keyboradRows[1], id: \.self) { button in
+                    ForEach($viewModel.keyboardRows[1], id: \.self) { button in
                         ButtonView(letter: button.letter.wrappedValue, state: button.state)
                             .frame(width: g.size.width*0.9/10)
                             .padding([.trailing,.leading], g.size.width*0.1/22)
@@ -33,7 +33,7 @@ struct KeyboardView: View {
                     ButtonView(icon: Image(systemName: "delete.left"), sign: "delete")
                         .frame(width: g.size.width*0.9/10*1.5, height: g.size.width*0.9/10*1.5)
                         .padding([.trailing,.leading], g.size.width*0.1/22)
-                    ForEach($viewModel.keyboradRows[2], id: \.self) { button in
+                    ForEach($viewModel.keyboardRows[2], id: \.self) { button in
                         ButtonView(letter: button.letter.wrappedValue, state: button.state)
                             .frame(width: g.size.width*0.9/10)
                             .padding([.trailing,.leading], g.size.width*0.1/22)
@@ -42,13 +42,20 @@ struct KeyboardView: View {
                         .frame(width: g.size.width*0.9/10*1.5, height: g.size.width*0.9/10*1.5)
                         .padding([.trailing,.leading], g.size.width*0.1/22)
                 }
-                HStack(spacing:0) {
-                    ForEach($viewModel.keyboradRows[3], id: \.self) { button in
-                        ButtonView(letter: button.letter.wrappedValue, state: button.state)
-                            .frame(width: g.size.width*0.9/10)
-                            .padding([.trailing,.leading], g.size.width*0.1/22)                    }
+                if (!viewModel.keyboardRows[3].isEmpty)
+                {
+                    HStack(spacing:0) {
+                        ForEach($viewModel.keyboardRows[3], id: \.self) { button in
+                            ButtonView(letter: button.letter.wrappedValue, state: button.state)
+                                .frame(width: g.size.width*0.9/10)
+                                .padding([.trailing,.leading], g.size.width*0.1/22)
+                        }
+                    }
+                    
+                } else {
+                    Spacer()
+                        .frame(width: g.size.width*0.9/10)
                 }
-                
             }
             .padding([.leading, .trailing], g.size.width*0.1/22)
         }

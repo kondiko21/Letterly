@@ -23,8 +23,23 @@ struct MainScreen: View {
         GeometryReader { geo in
             NavigationView {
                 VStack {
-                    Text("LETTERLY")
-                        .logoStyle()
+                    ZStack {
+                        HStack {
+                            Text("LETTERLY")
+                                .logoStyle()
+                        }
+                        HStack {
+                            Spacer()
+                            NavigationLink {
+                                SettingsView()
+                            } label: {
+                                Image(systemName: "gearshape.fill")
+                                    .font(.system(size: 25))
+                                    .foregroundStyle(.gray)
+                                    .padding(.trailing, 20)
+                            }
+                        }
+                    }
                     
                     Text("Ranking")
                         .font(.title)

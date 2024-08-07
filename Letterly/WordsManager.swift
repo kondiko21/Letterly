@@ -10,9 +10,10 @@ import Foundation
 class WordsManager {
     
     var words: [String]?
+    var languageManager = LanguageManager.shared
     
     func importWords(language: String) async {
-        if let filename = Bundle.main.path(forResource: "pl_PL", ofType: "txt", inDirectory: "Words") {
+        if let filename = Bundle.main.path(forResource: languageManager.selectedGameLangCode, ofType: "txt", inDirectory: "Words") {
             let contents = try! String(contentsOfFile: filename)
             self.words = contents.split(separator:"\n").map { String($0) }
         }

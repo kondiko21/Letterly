@@ -12,6 +12,7 @@ struct LetterlyApp: App {
     var body: some Scene {
         WindowGroup {
             MainScreen()
+                .environment(\.colorScheme, .light)
                 .environment(\.font, Font.custom("Rubik-VariableFont_wght", size: 14))
         }
     }
