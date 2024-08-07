@@ -17,23 +17,33 @@ class GameViewVM : ObservableObject {
     @Published var round: Int = 0
     @Published var isNotExistAlertPresented = false
     @Published var isCompleteViewPresented = false
+    @Published var isMenuPresented = false
     @Published var isGameOver = false
     var activeBox: Int = 0
     
     var wordBase = WordsManager()
+    var languageManager = LanguageManager.shared
     
     @Published var word: [String] = "OGIEŃ".map{String($0)}
-    @Published var keyboradRows: [[LetterStateVM]] = [
-        "QWERTYUIOP".map {LetterStateVM(String($0))},
-        "ASDFGHJKL".map {LetterStateVM(String($0))},
-        "ZXCVBNM".map {LetterStateVM(String($0))},
-        "ĘĄŁŚÓŻŹĆŃ".map {LetterStateVM(String($0))}
-    ]
+    @Published var keyboardRows: [[LetterStateVM]] = []
     
     init() {
         for _ in 0...4 {
             wordGuessAttempts.append([LetterStateVM](repeating: LetterStateVM(), count: wordLength))
         }
+        configureKeyboard()
+    }
+    
+    private func configureKeyboard() {
+        keyboardRows = [
+            "QWERTYUIOP".map {LetterStateVM(String($0))},
+            "ASDFGHJKL".map {LetterStateVM(String($0))},
+            "ZXCVBNM".map {LetterStateVM(String($0))}
+        ]
+        
+        keyboardRows.append(
+            languageManager.keyboardSpecialSigns[languageManager.selectedGameLangCode]!.map{LetterStateVM(String($0))}
+            )
     }
     
     func recivedSign(_ sign: String) {
@@ -97,12 +107,7 @@ class GameViewVM : ObservableObject {
         for i in 0...4 {
             wordGuessAttempts[i] = [LetterStateVM](repeating: LetterStateVM(), count: wordLength)
         }
-        keyboradRows = [
-            "QWERTYUIOP".map {LetterStateVM(String($0))},
-            "ASDFGHJKL".map {LetterStateVM(String($0))},
-            "ZXCVBNM".map {LetterStateVM(String($0))},
-            "ĘĄŁŚÓŻŹĆŃ".map {LetterStateVM(String($0))}
-        ]
+        configureKeyboard()
         
         do {
             try word = wordBase.generateRandomWord().map{String($0)}
@@ -151,22 +156,22 @@ class GameViewVM : ObservableObject {
     
     @MainActor
     private func setKeyboard(buttonLetter: String, state: BoxState) {
-        for rowIndex in keyboradRows.indices {
-            for buttonIndex in keyboradRows[rowIndex].indices {
-                if keyboradRows[rowIndex][buttonIndex].letter == buttonLetter {
-                    print("\(buttonLetter) \(state) \(keyboradRows[rowIndex][buttonIndex].state)")
+        for rowIndex in keyboardRows.indices {
+            for buttonIndex in keyboardRows[rowIndex].indices {
+                if keyboardRows[rowIndex][buttonIndex].letter == buttonLetter {
+                    print("\(buttonLetter) \(state) \(keyboardRows[rowIndex][buttonIndex].state)")
                     if state == .partlyCorrect {
-                        if keyboradRows[rowIndex][buttonIndex].state != .correct {
-                            keyboradRows[rowIndex][buttonIndex].state = state
+                        if keyboardRows[rowIndex][buttonIndex].state != .correct {
+                            keyboardRows[rowIndex][buttonIndex].state = state
                         }
                     } else if state == .invalid {
-                        print("\(keyboradRows[rowIndex][buttonIndex].state)")
-                        if (keyboradRows[rowIndex][buttonIndex].state != .partlyCorrect) &&  (keyboradRows[rowIndex][buttonIndex].state != .correct) {
-                            keyboradRows[rowIndex][buttonIndex].state = state
+                        print("\(keyboardRows[rowIndex][buttonIndex].state)")
+                        if (keyboardRows[rowIndex][buttonIndex].state != .partlyCorrect) &&  (keyboardRows[rowIndex][buttonIndex].state != .correct) {
+                            keyboardRows[rowIndex][buttonIndex].state = state
                         }
                     } else {
                         print("\(buttonLetter)")
-                        keyboradRows[rowIndex][buttonIndex].state = state
+                        keyboardRows[rowIndex][buttonIndex].state = state
                     }
                     break
                 }

@@ -31,8 +31,8 @@ struct GameView: View {
                     }
                     HStack {
                         Spacer()
-                        NavigationLink {
-                            NavigationLazyView(MainScreen().toolbar(.hidden))
+                        Button {
+                            viewModel.isMenuPresented = true
                         } label: {
                             Image(systemName: "gearshape.fill")
                                 .font(.system(size: 25))
@@ -77,93 +77,134 @@ struct GameView: View {
                 .autohideIn(1.5)
         }
         .popup(isPresented: $viewModel.isCompleteViewPresented){
-            VStack(spacing: 0) {
-                Text("YOU WON").foregroundStyle(Color.gray).font(.largeTitle)
-                    .padding(.top, 50)
-                Spacer()
-                Text("HIDDEN WORD:").foregroundStyle(Color.gray)
-                    .bold()
-                    .font(.headline)
-                    .padding(.bottom,0)
-                Text(viewModel.word.joined()).logoStyle()
-                    .padding(0)
-                Spacer()
-                
-                NavigationLink {
-                    MainScreen()
-                } label: {
-                    Text("MENU")
-                        .padding([.leading, .trailing], 50)
-                        .frame(maxWidth: .infinity)
-                }.buttonStyle(AppButton(weight: .regular))
-                    .frame(width:g.size.width*0.6)
-                Button {
-                    viewModel.prepareNewGame()
-                    viewModel.isCompleteViewPresented = false
-                } label: {
-                    Text("PLAY AGAIN")
-                        .fontWeight(.heavy)
-                        .padding([.leading, .trailing], 50)
-                        .frame(maxWidth: .infinity)
-                }.buttonStyle(AppButton(weight: .bold))
-                    .frame(width:g.size.width*0.6)
-                    .padding()
-                
-            }
+            EndGameView(label: "YOU WON", hiddenWord: viewModel.word.joined(), action: {
+                viewModel.prepareNewGame()
+                viewModel.isCompleteViewPresented = false
+            })
             .frame(width:g.size.width*0.8, height: g.size.height*0.5)
-            .background(Color("background"))
-            .cornerRadius(10)
             .compositingGroup()
-            .shadow(radius: 10)
 
         }
-        .popup(isPresented: $viewModel.isGameOver){
-            VStack(spacing: 0) {
-                Text("GAME OVER").foregroundStyle(Color.gray).font(.largeTitle)
-                    .padding(.top, 50)
-                Spacer()
-                Text("HIDDEN WORD:").foregroundStyle(Color.gray)
-                    .bold()
-                    .font(.headline)
-                    .padding(.bottom,0)
-                Text(viewModel.word.joined()).logoStyle()
-                    .padding(0)
-                Spacer()
-                
-                NavigationLink {
-                    MainScreen()
-                } label: {
-                    Text("MENU")
-                        .padding([.leading, .trailing], 50)
-                        .frame(maxWidth: .infinity)
-                }.buttonStyle(AppButton(weight: .regular))
-                    .frame(width:g.size.width*0.6)
-                Button {
-                    viewModel.prepareNewGame()
-                    viewModel.isGameOver = false
-                } label: {
-                    Text("PLAY AGAIN")
-                        .fontWeight(.heavy)
-                        .padding([.leading, .trailing], 50)
-                        .frame(maxWidth: .infinity)
-                }.buttonStyle(AppButton(weight: .bold))
-                    .frame(width:g.size.width*0.6)
-                    .padding()
-                
-            }
+        .popup(isPresented: $viewModel.isGameOver) {
+            EndGameView(label: "END GAME", hiddenWord: viewModel.word.joined(), action: {
+                viewModel.prepareNewGame()
+                viewModel.isGameOver = false
+            })
             .frame(width:g.size.width*0.8, height: g.size.height*0.5)
-            .background(Color("background"))
-            .cornerRadius(10)
             .compositingGroup()
-            .shadow(radius: 10)
 
         } customize: {
             $0.dragToDismiss(true)
         }
+        .popup(isPresented: $viewModel.isMenuPresented) {
+            GameMenuView(restartAction:
+            {
+                viewModel.prepareNewGame()
+                viewModel.isMenuPresented = false
+            })
+            .frame(width:g.size.width*0.8, height: g.size.height*0.5)
+            .compositingGroup()
+
+        } customize: {
+            $0.dragToDismiss(true)
         }
+            
+    
+        }
+        
     }
 }
 
+struct GameMenuView: View {
+    
+    var restartAction : () -> Void
+    
+    var body: some View {
+        GeometryReader { g in
+            VStack(spacing: 0) {
+                Text("MENU").foregroundStyle(Color.gray).font(.largeTitle)
+                    .padding(.top, 50)
+                Spacer()
+                Button {
+                    restartAction()
+                } label: {
+                    Text("Restart")
+                        .padding([.leading, .trailing], 50)
+                        .frame(maxWidth: .infinity)
+                }.buttonStyle(AppButton(weight: .regular))
+                    .frame(width:g.size.width*0.6)
+                NavigationLink {
+                    MainScreen()
+                } label: {
+                    Text("Menu")
+                        .fontWeight(.heavy)
+                        .padding([.leading, .trailing], 50)
+                        .frame(maxWidth: .infinity)
+                }.buttonStyle(AppButton(weight: .bold))
+                    .frame(width:g.size.width*0.6)
+                    .padding()
+                
+            }
+            .frame(width: g.size.width)
+        }.padding(0)
+        .background(Color("background"))
+        .cornerRadius(10)
+        .shadow(radius: 10)
+    }
+    
+}
+
+
+
 #Preview {
-    GameView(gameConfiguration: GameConfiguration())
+    //GameView(gameConfiguration: GameConfiguration())
+    GameMenuView(restartAction: {print("Hello world")})
+}
+
+struct EndGameView: View {
+    
+    let label: String
+    let hiddenWord: String
+    let action: () -> Void
+    
+    var body: some View {
+        
+        GeometryReader { g in
+            VStack(spacing: 0) {
+                Text(label).foregroundStyle(Color.gray).font(.largeTitle)
+                    .padding(.top, 50)
+                Spacer()
+                Text("HIDDEN WORD:").foregroundStyle(Color.gray)
+                    .bold()
+                    .font(.headline)
+                    .padding(.bottom,0)
+                Text(hiddenWord).logoStyle()
+                    .padding(0)
+                Spacer()
+                
+                NavigationLink {
+                    MainScreen()
+                } label: {
+                    Text("MENU")
+                        .padding([.leading, .trailing], 50)
+                        .frame(maxWidth: .infinity)
+                }.buttonStyle(AppButton(weight: .regular))
+                    .frame(width:g.size.width*0.6)
+                Button {
+                    action()
+                } label: {
+                    Text("PLAY AGAIN")
+                        .fontWeight(.heavy)
+                        .frame(maxWidth: .infinity)
+                }.buttonStyle(AppButton(weight: .bold))
+                    .frame(width:g.size.width*0.6)
+                    .padding()
+                
+            }
+            .frame(width: g.size.width)
+        }.padding(0)
+        .background(Color("background"))
+        .cornerRadius(10)
+        .shadow(radius: 10)
+    }
 }
