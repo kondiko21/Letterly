@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseFirestore
 
 struct MainScreen: View {
     
@@ -17,6 +18,8 @@ struct MainScreen: View {
     @State var rankingGameOn: String = "Yes"
     @State var rankingGameOptions: [String] = ["Yes", "No"]
     var names = ["Marysia", "Adaś", "Krzyś", "John", "Joe", "Monica","Rachel"]
+    var userManager = UsersManager()
+    @State var ranking: [String:Int] = [:]
     @State var startTapped: Bool = false
     
     var body: some View {
@@ -31,7 +34,7 @@ struct MainScreen: View {
                         HStack {
                             Spacer()
                             NavigationLink {
-                                SettingsView()
+                                SettingsView().navigationBarHidden(true)
                             } label: {
                                 Image(systemName: "gearshape.fill")
                                     .font(.system(size: 25))
@@ -48,21 +51,32 @@ struct MainScreen: View {
                         .padding(.bottom, 5)
                     
                     VStack(spacing: 0) {
+                        //RANKING LIST
                         Divider().padding(5).padding([.leading, .trailing], 50)
-                        ForEach(names.indices) { i in
-                            HStack {
-                                Text("\(i+1). \(names[i])")
-                                    .font(.headline)
-                                    .foregroundStyle(.gray)
-                                    .opacity(0.9)
-                                Spacer()
-                                Text("\(50-i*5) wins")
-                                    .font(.headline)
-                                    .foregroundStyle(.gray)
-                                    .opacity(0.9)
-                            }.padding([.leading, .trailing], 70)
-                            
-                            Divider().padding(5).padding([.leading, .trailing], 50)
+                        if !ranking.isEmpty {
+                            ForEach(allKeys, id: \.self) { key in
+                                HStack {
+                                    Text("\(1). \(key)")
+                                        .font(.headline)
+                                        .foregroundStyle(.gray)
+                                        .opacity(0.9)
+                                    Spacer()
+                                    Text("\(binding(for: key).wrappedValue) wins")
+                                        .font(.headline)
+                                        .foregroundStyle(.gray)
+                                        .opacity(0.9)
+                                }.padding([.leading, .trailing], 20)
+                                
+                                Divider().padding(5).padding([.leading, .trailing], 50)
+                            }
+                        } else {
+                            ProgressView().progressViewStyle(CircularProgressViewStyle())
+                        }
+                    }.onAppear {
+                        Task {
+                            print("Read")
+                            ranking = await userManager.getRanking(limit: 5)
+                            print("Ranking \(ranking)")
                         }
                     }
                     
@@ -97,6 +111,7 @@ struct MainScreen: View {
                         NavigationLazyView(GameView(gameConfiguration: gameConfiguration).toolbar(.hidden))
                     } label: {
                         Text("START")
+                            .padding()
                             .padding([.leading, .trailing], 100)
                     }
                     .buttonStyle(AppButton(weight: .bold))
@@ -109,23 +124,18 @@ struct MainScreen: View {
         }
         
     }
-}
-
-struct AppButton: ButtonStyle {
     
-    var weight : Font.Weight
+    private var allKeys: [String] {
+            return ranking.keys.sorted().map { String($0) }
+        }
     
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding()
-            .foregroundStyle(Color(.gray))
-            .fontWeight(weight)
-            .background(Color("letterbox.neutral"))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(color: .gray, radius: 2)
-            .scaleEffect(configuration.isPressed ? 0.9 : 1)
-            .animation(.easeOut(duration: 0.2), value: configuration.isPressed)
-    }
+    private func binding(for key: String) -> Binding<Int> {
+            return Binding(get: {
+                return self.ranking[key] ?? 0
+            }, set: {
+                self.ranking[key] = $0
+            })
+        }
 }
 
 class GameConfiguration: ObservableObject {
@@ -184,6 +194,45 @@ struct NavigationLazyView<Content: View>: View {
     var body: Content {
         build()
     }
+}
+
+struct UsersManager {
+    
+    
+    let db = Firestore.firestore()
+    func getRanking(limit: Int) async -> [String:Int] {
+        
+        var ranking: [String:Int] = [:]
+        var result: [String:Int] = [:]
+        
+        do {
+            let rankingRef = db.collection("ranking")
+            rankingRef.order(by: "winningGames").limit(to: 5)
+            let rankingSnapshot = try await rankingRef.getDocuments()
+            for document in rankingSnapshot.documents {
+                let id = document.documentID
+                let data = document.data()["winningGames"] as! Int
+                ranking[id] = data
+            }
+            let usersRef = db.collection("users")
+            usersRef.whereField("uid", in: ranking.keys.sorted())
+            let usersSnapshot = try await usersRef.getDocuments()
+            for document in usersSnapshot.documents {
+                let id = document.data()["uid"] as! String
+                let name = document.data()["username"] as! String
+                let resultForId = ranking[id]
+                result[name] = resultForId
+            }
+            
+            return Dictionary(uniqueKeysWithValues: result.sorted(by: { $0.key < $1.key }))
+        } catch {
+            print("Error getting documents: \(error)")
+            return [:]
+        }
+        
+    }
+    
+    
 }
 
 #Preview {

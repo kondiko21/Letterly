@@ -30,6 +30,13 @@ struct GameView: View {
                             .logoStyle()
                     }
                     HStack {
+//                        Button {
+//                            viewModel.isMenuPresented = true
+//                        } label: {
+//                            Color(.gray).clipShape (
+//                                Image("hint.reveal")
+//                            )
+//                        }
                         Spacer()
                         Button {
                             viewModel.isMenuPresented = true
@@ -129,6 +136,7 @@ struct GameMenuView: View {
                     restartAction()
                 } label: {
                     Text("Restart")
+                        .padding([.top, .bottom])
                         .padding([.leading, .trailing], 50)
                         .frame(maxWidth: .infinity)
                 }.buttonStyle(AppButton(weight: .regular))
@@ -137,6 +145,7 @@ struct GameMenuView: View {
                     MainScreen()
                 } label: {
                     Text("Menu")
+                        .padding([.top, .bottom])
                         .fontWeight(.heavy)
                         .padding([.leading, .trailing], 50)
                         .frame(maxWidth: .infinity)
@@ -157,8 +166,8 @@ struct GameMenuView: View {
 
 
 #Preview {
-    //GameView(gameConfiguration: GameConfiguration())
-    GameMenuView(restartAction: {print("Hello world")})
+    GameView(gameConfiguration: GameConfiguration())
+//    GameMenuView(restartAction: {print("Hello world")})
 }
 
 struct EndGameView: View {
@@ -186,6 +195,7 @@ struct EndGameView: View {
                     MainScreen()
                 } label: {
                     Text("MENU")
+                        .padding()
                         .padding([.leading, .trailing], 50)
                         .frame(maxWidth: .infinity)
                 }.buttonStyle(AppButton(weight: .regular))
@@ -194,6 +204,7 @@ struct EndGameView: View {
                     action()
                 } label: {
                     Text("PLAY AGAIN")
+                        .padding()
                         .fontWeight(.heavy)
                         .frame(maxWidth: .infinity)
                 }.buttonStyle(AppButton(weight: .bold))

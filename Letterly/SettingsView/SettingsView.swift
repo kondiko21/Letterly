@@ -10,9 +10,13 @@ import SwiftUI
 struct SettingsView: View {
     
     @ObservedObject var viewModel = SettingsVM()
+    @ObservedObject var appState = AppState()
     
     var body: some View {
         ZStack {
+            NavigationLink(destination: LoginView().navigationBarHidden(true), isActive: $viewModel.isSignedOut) {
+            EmptyView()
+            }
             Color("background").ignoresSafeArea()
             VStack(spacing: 0){
                 ZStack {
@@ -24,9 +28,13 @@ struct SettingsView: View {
                         NavigationLink {
                             NavigationLazyView(MainScreen().toolbar(.hidden))
                         } label: {
-                            Text("Back")
-                                .font(.system(size: 25))
-                                .foregroundStyle(.gray)
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                Text("Back")
+                                    .font(.system(size: 20))
+                                    .foregroundStyle(.gray)
+                                .bold()
+                            }
                         }
                         Spacer()
                     }
@@ -50,11 +58,24 @@ struct SettingsView: View {
                     .environment(\.colorScheme, .light)
                     .bold()
                     .pickerStyle(.navigationLink)
+                    
                 }
                 .environment(\.colorScheme, .light)
                 .scrollContentBackground(.hidden)
                 .padding(.top, -20)
-
+                
+                Button {
+                    do {
+                        try viewModel.logOut()
+                        appState.signOut()
+                    } catch {
+                        print(error)
+                    }
+                } label: {
+                    Text("Log Out")
+                        .padding([.top, .bottom])
+                        .padding([.leading, .trailing], 100)
+                }.buttonStyle(AppButton(weight: .bold))
                 Spacer()
             }
         }

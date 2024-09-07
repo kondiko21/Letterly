@@ -8,9 +8,11 @@
 import Foundation
 import UIKit
 import SwiftUI
+import FirebaseFirestore
 
 class GameViewVM : ObservableObject {
     
+    let db = Firestore.firestore()
     @Published var wordLength: Int = 5
     @Published var typingEnabled = true //Determines if keyboard is working - used during async await
     @Published var wordGuessAttempts: [[LetterStateVM]] = []
@@ -102,7 +104,7 @@ class GameViewVM : ObservableObject {
     }
     
     func prepareNewGame() {
-        var _ = isReal(word: "aaaaa", lang: "pl_PL") //Solving problem (bug probably) which first execution always return true
+        var _ = isReal(word: "aaaaa", lang: languageManager.selectedGameLangCode) //Solving problem (bug probably) which first execution always return true
         
         for i in 0...4 {
             wordGuessAttempts[i] = [LetterStateVM](repeating: LetterStateVM(), count: wordLength)
@@ -134,13 +136,14 @@ class GameViewVM : ObservableObject {
                 isGameOver = true
             }
         case .winning:
+            await updateRanking()
             isCompleteViewPresented = true
         }
     }
     
     private func checkTypedWord() -> RoundResult {
         let typedWord = wordGuessAttempts[round].compactMap { $0.letter } as [String]
-        if isReal(word: typedWord.joined().lowercased(), lang: "pl_PL") {
+        if isReal(word: typedWord.joined().lowercased(), lang: languageManager.selectedGameLangCode) {
             
             let result = verifyWord()
             
@@ -194,7 +197,30 @@ class GameViewVM : ObservableObject {
         }
     }
     
-    private func verifyWord() -> (Int, [LetterStateVM]) { //(correct letter amount, states array)
+    private func updateRanking() async {
+        
+        var uid : String? = await AuthenticationManager.shared.getAuthenticatedUser()?.uid
+        let docRef = db.collection("ranking").document(uid!)
+        do {
+            let document = try await docRef.getDocument()
+            if document.exists {
+                let winningGames = document.data()?["winningGames"] as? Int
+                if let winningGames {
+                    try await docRef.setData([
+                        "winningGames": winningGames+1]
+                    )
+                }
+            } else {
+                try await docRef.setData([
+                    "winningGames": 1]
+                )
+            }
+        } catch {
+            print("Error getting document: \(error)")
+        }
+    }
+    
+    func verifyWord() -> (Int, [LetterStateVM]) { //(correct letter amount, states array)
         var newStates = wordGuessAttempts[round]
         var letterSet : [String:Int] = [:] //How often letter occurs in word
         var correctLettersAmunt: Int = 0
